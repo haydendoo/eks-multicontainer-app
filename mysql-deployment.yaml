@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql-db
+  labels:
+    app: mysql-db
+spec:
+  selector:
+    matchLabels:
+      app: mysql-pod
+  serviceName: mysql-db
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mysql-pod
+    spec:
+      containers:
+        - name: mysql-pod
+          image: mysql:latest
+          imagePullPolicy: Never
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: sigma
+            - name: MYSQL_DATABASE
+              value: sigma
+            - name: MYSQL_USER
+              value: sigma
+            - name: MYSQL_PASSWORD
+              value: sigma
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: mysql-data
+              mountPath: /var/lib/mysql
+  volumeClaimTemplates:
+    - metadata:
+        name: mysql-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi

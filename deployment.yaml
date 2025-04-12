@@ -1,0 +1,30 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-server
+  labels:
+    app: go-server-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: go-server-pod
+  template:
+    metadata:
+      labels:
+        app: go-server-pod
+    spec:
+      containers:
+        - name: go-server
+          image: go-server:latest
+          ports:
+            - containerPort: 8080
+          imagePullPolicy: Never
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "500m"
+            limits:
+              memory: "512Mi"
+              cpu: "1"
